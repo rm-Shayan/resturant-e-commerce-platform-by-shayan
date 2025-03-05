@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Restaurant Menu</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    
+<body class="bg-gray-100">
+
+    <!-- Navigation -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center p-5">
+            <h1 id="restaurantName" class="text-2xl font-bold text-green-600">Restaurant Menu</h1>
+            <a href="../index.html" class="text-gray-700 hover:text-green-500">🏠 Home</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="text-center py-10 bg-green-100">
+        <h2 class="text-3xl font-bold">Delicious Dishes Await You!</h2>
+        <p class="mt-2 text-gray-700">Explore the best meals from this restaurant</p>
+    </section>
+
+    <!-- Food Menu Section -->
+    <section class="container mx-auto mt-10">
+        <h3 class="text-2xl font-bold mb-6">Our Menu</h3>
+        <div id="foodSection" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+            <!-- Food items will be dynamically inserted here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-6 mt-10">
+        <p>&copy; 2025 Foody - All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="food.js"></script>
+</body>
+</html>
+

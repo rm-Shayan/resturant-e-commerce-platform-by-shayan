@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Pizza Palace",
+        "address": "123 Main Street, New York, NY",
+        "description": "Authentic Italian pizzas with a crispy crust.",
+        "contact": {
+            "phone": "+1 123-456-7890",
+            "email": "contact@pizzapalace.com"
+        },
+        "logo": "admin-pannel/assets/resturant-images/taco-bell.webp",
+        "dishes": [
+            {
+                "category": "Italian",
+                "name": "Margherita Pizza",
+                "description": "Classic pizza with fresh basil and mozzarella.",
+                "price": 10.99,
+                "image": "/admin-pannel/assets/dishes-images/download.jpeg"
+            },
+            {
+                "category": "Fast Food",
+                "name": "Garlic Bread",
+                "description": "Crispy garlic bread with herbs.",
+                "price": 4.99,
+                "image": "/admin-pannel/assets/dishes-images/download (2).jpeg"
+            }
+        ]
+    },
+    {
+        "name": "Sushi Spot",
+        "address": "456 Ocean Drive, Los Angeles, CA",
+        "description": "Fresh and delicious sushi and sashimi.",
+        "contact": {
+            "phone": "+1 987-654-3210",
+            "email": "info@sushispot.com"
+        },
+        "logo": "admin-pannel/assets/resturant-images/burger-king.webp",
+        "dishes": [
+            {
+                "category": "Japanese",
+                "name": "California Roll",
+                "description": "Crab, avocado, and cucumber sushi roll.",
+                "price": 8.99,
+                "image": "/admin-pannel/assets/dishes-images/images.jpeg"
+            },
+            {
+                "category": "Soups",
+                "name": "Miso Soup",
+                "description": "Traditional Japanese miso soup.",
+                "price": 3.99,
+                "image": "/admin-pannel/assets/dishes-images/download (3).jpeg"
+            }
+        ]
+    }
+]

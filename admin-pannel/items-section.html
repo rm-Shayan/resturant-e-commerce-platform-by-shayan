@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Food Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">🍽️ Restaurant Food Management</h1>
+
+        <!-- Buttons -->
+        <div class="flex justify-center gap-4 mb-6">
+            <button onclick="openModal('sectionModal')" class="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-3 rounded-lg shadow-md">
+                ➕ Add Food Section
+            </button>
+            <button onclick="openModal('dishModal')" class="bg-green-600 hover:bg-green-700 transition text-white px-5 py-3 rounded-lg shadow-md">
+                🍲 Add Dish
+            </button>
+        </div>
+
+        <!-- Food Sections -->
+        <div  id="foodSections" class="space-y-4">
+            <!-- Sections will be dynamically added here -->
+        </div>
+    </div>
+
+
+
+
+
+<!-- Add Food Section Modal -->
+<div id="sectionModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-700">➕ Add Food Section</h2>
+        <form id="sectionForm">
+            <label class="block mb-2 font-medium text-gray-600">Section Name</label>
+            <input type="text" id="sectionName" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-blue-400 focus:outline-none" required>
+
+            <div class="flex justify-end gap-3">
+                <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition" onclick="closeModal('sectionModal')">Cancel</button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Add Section</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+    <!-- Add Dish Modal -->
+    <div id="dishModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">🍲 Add Dish</h2>
+            <form id="dishForm">
+                <label class="block mb-2 font-medium text-gray-600">Select Section</label>
+                <select id="sectionDropdown" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" required>
+                    <!-- Sections will be dynamically added -->
+                </select>
+
+                <label class="block mb-2 font-medium text-gray-600">Dish Name</label>
+                <input type="text" id="dishName" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" required>
+
+                <label class="block mb-2 font-medium text-gray-600">Upload Dish Image</label>
+                <input type="file" id="dishImage" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" accept="image/*" required onchange="previewImage(event)">
+
+                <!-- Image Preview -->
+                <div id="imagePreviewContainer" class="hidden mb-4">
+                    <p class="text-gray-500 text-sm mb-2">Preview:</p>
+                    <img id="imagePreview" class="w-full h-40 object-cover rounded-md shadow-md">
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition" onclick="closeModal('dishModal')">Cancel</button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Add Dish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="foodManage.js"></script>
+    
+</body>
+</html>
