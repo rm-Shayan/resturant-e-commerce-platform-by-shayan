@@ -4,7 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "login.html"; // Redirect if not logged in
     }
 
-    const login=localStorage.getItem("is")
+    const login=localStorage.getItem("isLogin")
+    if(login!="true"){
+window.open("login.html")
+    }
     const modal = document.getElementById("restaurantModal");
     const openModalBtn = document.getElementById("openRestaurantModal");
     const closeModalBtn = document.getElementById("closeRestaurantModal");
@@ -34,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "Best Italian Pizzas in town!",
             phone: "123-456-7890",
             email: "info@pizzapalace.com",
-            logo: "assets/resturant-images/taco-bell.webp",
+            logo: "assets/resturant-images/1.jpeg",
             id: Date.now() + 1 // ✅ UNIQUE ID
         },
         {
@@ -43,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "Tasty and juicy burgers",
             phone: "987-654-3210",
             email: "contact@burgerhub.com",
-            logo: "assets/dishes-images/download (2).jpeg",
+            logo: "assets/resturant-images/2.jpeg",
             id: Date.now() + 2 // ✅ UNIQUE ID
         }
     ];
