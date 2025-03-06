@@ -18,7 +18,7 @@
                 <ul class="space-y-2">
                     <li class="p-2 bg-gray-200 rounded"><a href="#">Home</a></li>
                     <li class="p-2 hover:bg-gray-200 rounded"><a href="food.html">Foods</a></li>
-                    <li class="p-2 hover:bg-gray-200 rounded"><a href="cart.html">Cart</a></li>
+                    <li class="p-2 hover:bg-gray-200 rounded" id="cartLink"><a href="cart.html">Cart</a></li>
                     <li class="p-2 hover:bg-gray-200 rounded"><a href="#">Orders</a></li>
                     <li class="p-2 hover:bg-gray-200 rounded"><a href="#">Chat</a></li>
                 </ul>
@@ -62,6 +62,18 @@
                 </div>
                 <img src="assets/458-4583469_delivery-icon-clip-art-delivery-order-icon-png.png" alt="Delivery" class="w-32">
             </div>
+
+
+            <!-- Cart Sidebar -->
+<aside id="cartSidebar" class="fixed right-0 top-0 w-80 lg:w-[80vw] sm:w-full bg-white shadow-lg h-[80vh] sm:h-full mt-16 sm:mt-0 transform translate-x-80 transition-transform duration-300 ease-in-out overflow-y-auto hidden">
+    <div class="p-5 border-b flex justify-between items-center">
+        <h3 class="text-xl font-bold">User  Cart</h3>
+        <button onclick="toggleCart()" class="text-red-500 text-xl">&times;</button>
+    </div>
+    <div id="cartItemsContainer" class="p-5 space-y-4">
+        <!-- Cart items will be dynamically inserted here -->
+    </div>
+</aside>
 
             <!-- Subscription Alert -->
             <div class="bg-red-100 p-4 mt-4 rounded text-red-700">
@@ -142,6 +154,98 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const cartLink = document.getElementById("cartLink");
+
+    if (cartLink) {
+        cartLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleCart();
+        });
+    } else {
+        console.error("cartLink element not found!");
+    }
+});
+
+function toggleCart() {
+    const cartSidebar = document.getElementById("cartSidebar");
+
+    if (cartSidebar.classList.contains("hidden")) {
+        cartSidebar.classList.remove("hidden");
+        setTimeout(() => {
+            cartSidebar.classList.remove("translate-x-80");
+            cartSidebar.classList.add("translate-x-0");
+        }, 10); // Small delay to allow transition to take effect
+        loadCartItems(); // Load items when opening
+    } else {
+        cartSidebar.classList.remove("translate-x-0");
+        cartSidebar.classList.add("translate-x-80");
+
+        setTimeout(() => {
+            cartSidebar.classList.add("hidden");
+        }, 300); // Wait for transition to complete before hiding
+    }
+}
+
+function loadCartItems() {
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    if (!cartItemsContainer) {
+        console.error("Cart container not found!");
+        return;
+    }
+
+    cartItemsContainer.innerHTML = ""; // Clear previous content
+
+    let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
+    console.log("Loaded Cart Data:", cart);
+
+    if (!Array.isArray(cart) || cart.length === 0) {
+        cartItemsContainer.innerHTML = "<p class='text-center text-gray-500'>Your cart is empty.</p>";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const cartItem = document.createElement("div");
+        cartItem.className = "flex items-center justify-between p-3 border-b";
+
+        cartItem.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                <div>
+                    <p class="font-semibold">${item.name}</p>
+                    <p class="text-gray-600">${item.price}</p>
+
+                </div>
+                                  
+            </div>
+ 
+            <button class="remove-btn text-red-500" data-index="${index}">&times;</button>
+        `;
+
+        cartItemsContainer.appendChild(cartItem);
+    });
+
+    // Attach event listeners to remove buttons
+    document.querySelectorAll(".remove-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const index = parseInt(this.getAttribute("data-index"));
+            removeFromCart(index);
+        });
+    });
+}
+
+// Function to remove item from cart
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("itemsInCart", JSON.stringify(cart));
+    loadCartItems(); // Refresh cart display
+}
+
+
+
+
     </script>
 
 </body>

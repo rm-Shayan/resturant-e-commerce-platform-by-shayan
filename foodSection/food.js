@@ -127,7 +127,8 @@ function itemInCart(button) {
     let itemData = {
         name: dishName,
         price: dishPrice,
-        image: dishImage
+        image: dishImage,
+        order:"order Now"
     };
 
     // Get existing cart data from localStorage
