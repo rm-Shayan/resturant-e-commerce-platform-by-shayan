@@ -102,6 +102,7 @@ function loadSections(restaurantId) {
                     <li class="flex items-center gap-3">
                         <img src="${dish.image}" class="w-12 h-12 object-cover rounded" alt="${dish.name}">
                         <span>${dish.name}</span>
+                         <span>${dish.Price}</span>
                         <button class="text-red-500 text-sm" onclick="deleteDish(${index}, '${dish.name}')">[Remove]</button>
                     </li>
                 `).join("")}
@@ -145,8 +146,9 @@ function addDish(event) {
     const sectionIndex = parseInt(document.getElementById("sectionDropdown").value, 10);
     const dishName = document.getElementById("dishName").value.trim();
     const imageInput = document.getElementById("dishImage").files[0];
+    const dishPrice=document.getElementById("dishPrice").value
 
-    if (isNaN(sectionIndex) || !dishName || !imageInput) return;
+    if (isNaN(sectionIndex) || !dishName || !imageInput || !dishPrice) return;
 
     const restaurantId = parseInt(localStorage.getItem("selectedRestaurantId"), 10);
     if (isNaN(restaurantId)) return;
@@ -161,7 +163,7 @@ function addDish(event) {
 
     const reader = new FileReader();
     reader.onload = function () {
-        restaurant.sections[sectionIndex].dishes.push({ name: dishName, image: reader.result });
+        restaurant.sections[sectionIndex].dishes.push({ name: dishName, image: reader.result,Price:dishPrice });
 
         localStorage.setItem("restaurants", JSON.stringify(restaurants));
 

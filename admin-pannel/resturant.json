@@ -7,7 +7,7 @@
             "phone": "+1 123-456-7890",
             "email": "contact@pizzapalace.com"
         },
-        "logo": "admin-pannel/assets/resturant-images/taco-bell.webp",
+        "logo": "admin-pannel/assets/resturant-images/dunkin-donuts.webp",
         "dishes": [
             {
                 "category": "Italian",
@@ -21,7 +21,7 @@
                 "name": "Garlic Bread",
                 "description": "Crispy garlic bread with herbs.",
                 "price": 4.99,
-                "image": "/admin-pannel/assets/dishes-images/download (2).jpeg"
+                "image": "admin-pannel/assets/dishes-images/download (2).jpeg"
             }
         ]
     },

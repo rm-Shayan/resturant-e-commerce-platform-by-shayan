@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Food Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-5xl mx-auto">
@@ -27,7 +29,7 @@
     </div>
 
 
-
+<a href="food.html" class="fixed bottom-10 bg-green-600 px-[6] py-2 hover:bg-green-700 transition text-white px-3 py-2 rounded-full shadow-sm"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
 
 
 <!-- Add Food Section Modal -->
@@ -65,6 +67,9 @@
 
                 <label class="block mb-2 font-medium text-gray-600">Upload Dish Image</label>
                 <input type="file" id="dishImage" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" accept="image/*" required onchange="previewImage(event)">
+                 
+                <label class="block mb-2 font-medium text-gray-600">price</label>
+                <input type="text" id="dishPrice" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none"  required onchange="previewImage(event)">
 
                 <!-- Image Preview -->
                 <div id="imagePreviewContainer" class="hidden mb-4">

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "Best Italian Pizzas in town!",
             phone: "123-456-7890",
             email: "info@pizzapalace.com",
-            logo: "assets/resturant-images/starbucks.webp",
+            logo: "assets/resturant-images/taco-bell.webp",
             id: Date.now() + 1 // ✅ UNIQUE ID
         },
         {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "Tasty and juicy burgers",
             phone: "987-654-3210",
             email: "contact@burgerhub.com",
-            logo: "assets/resturant-images/download (3).jpeg",
+            logo: "assets/dishes-images/download (2).jpeg",
             id: Date.now() + 2 // ✅ UNIQUE ID
         }
     ];
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const logoInput = document.getElementById("restaurantLogo");
         const id = new Date().getTime(); // Generate unique ID
 
-        let logo = "assets/resturant-images/default.png"; // Default logo
+        // Default logo
 
         // Handle logo upload
         if (logoInput.files.length > 0) {
