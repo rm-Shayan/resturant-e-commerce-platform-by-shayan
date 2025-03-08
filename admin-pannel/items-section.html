@@ -5,56 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Food Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
+    <style>
+        /* Custom Styling */
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .shadow-card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-bg {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">🍽️ Restaurant Food Management</h1>
+<body class="p-6">
+
+    <div class="container">
+        <!-- Header with Home Button -->
+        <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-card mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">🍽️ Restaurant Food Management</h1>
+
+            <!-- Home Button -->
+            <a href="admin.html" class="bg-blue-500 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md transition-all flex items-center">
+                🏠 Home
+            </a>
+        </div>
 
         <!-- Buttons -->
         <div class="flex justify-center gap-4 mb-6">
-            <button onclick="openModal('sectionModal')" class="bg-blue-600 hover:bg-blue-700 transition text-white px-5 py-3 rounded-lg shadow-md">
+            <button onclick="openModal('sectionModal')" class="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-lg shadow-md text-lg">
                 ➕ Add Food Section
             </button>
-            <button onclick="openModal('dishModal')" class="bg-green-600 hover:bg-green-700 transition text-white px-5 py-3 rounded-lg shadow-md">
+            <button onclick="openModal('dishModal')" class="bg-green-600 hover:bg-green-700 transition text-white px-6 py-3 rounded-lg shadow-md text-lg">
                 🍲 Add Dish
             </button>
         </div>
 
         <!-- Food Sections -->
-        <div  id="foodSections" class="space-y-4">
+        <div id="foodSections" class="space-y-4">
             <!-- Sections will be dynamically added here -->
         </div>
     </div>
 
+    <!-- Back Button -->
+    <a href="food.html" class="fixed bottom-10 left-10 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow-md transition-all">
+        <i class="fa fa-angle-left"></i> Back
+    </a>
 
-<a href="food.html" class="fixed bottom-10 bg-green-600 px-[6] py-2 hover:bg-green-700 transition text-white px-3 py-2 rounded-full shadow-sm"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+    <!-- Add Food Section Modal -->
+    <div id="sectionModal" class="fixed inset-0 flex items-center justify-center modal-bg hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform animate-fade-in">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">➕ Add Food Section</h2>
+            <form id="sectionForm">
+                <label class="block mb-2 font-medium text-gray-600">Section Name</label>
+                <input type="text" id="sectionName" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-blue-400 focus:outline-none" required>
 
-
-<!-- Add Food Section Modal -->
-<div id="sectionModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm hidden transition-opacity">
-    <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform">
-        <h2 class="text-2xl font-semibold mb-4 text-gray-700">➕ Add Food Section</h2>
-        <form id="sectionForm">
-            <label class="block mb-2 font-medium text-gray-600">Section Name</label>
-            <input type="text" id="sectionName" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-blue-400 focus:outline-none" required>
-
-            <div class="flex justify-end gap-3">
-                <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition" onclick="closeModal('sectionModal')">Cancel</button>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Add Section</button>
-            </div>
-        </form>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition" onclick="closeModal('sectionModal')">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Add Section</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-
-
-
 
     <!-- Add Dish Modal -->
-    <div id="dishModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm hidden transition-opacity">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform">
+    <div id="dishModal" class="fixed inset-0 flex items-center justify-center modal-bg hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96 transform scale-95 transition-transform animate-fade-in">
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">🍲 Add Dish</h2>
             <form id="dishForm">
                 <label class="block mb-2 font-medium text-gray-600">Select Section</label>
@@ -67,9 +104,9 @@
 
                 <label class="block mb-2 font-medium text-gray-600">Upload Dish Image</label>
                 <input type="file" id="dishImage" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" accept="image/*" required onchange="previewImage(event)">
-                 
-                <label class="block mb-2 font-medium text-gray-600">price</label>
-                <input type="text" id="dishPrice" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none"  required onchange="previewImage(event)">
+
+                <label class="block mb-2 font-medium text-gray-600">Price</label>
+                <input type="text" id="dishPrice" class="w-full border border-gray-300 p-2 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 focus:outline-none" required>
 
                 <!-- Image Preview -->
                 <div id="imagePreviewContainer" class="hidden mb-4">
@@ -86,6 +123,6 @@
     </div>
 
     <script src="foodManage.js"></script>
-    
+
 </body>
 </html>

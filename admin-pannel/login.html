@@ -51,43 +51,48 @@
             email: "shayanrajput897@gmail.com",
             password: "shayanRao123"
         };
-
+    
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent form submission
-
+    
             // Get user input
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             const rememberMe = document.getElementById("rememberMe").checked;
-
+    
             // Check if entered email & password match the default user
             if (email === defaultUser.email && password === defaultUser.password) {
                 // Store login status in localStorage
-                localStorage.setItem("isLoggedIn", true);
+                localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("userEmail", email);
-
+    
                 if (rememberMe) {
-                    localStorage.setItem("rememberMe", true);
+                    localStorage.setItem("rememberMe", "true");
                 } else {
                     localStorage.removeItem("rememberMe");
                 }
-
-              
+    
+                // ✅ Redirect in the same window
                 window.location.href = "admin.html";
             } else {
-               
                 document.getElementById("errorMessage").classList.remove("hidden");
             }
         });
-
-   
+    
+        // ✅ Check if the user is already logged in when the page loads
         window.onload = function() {
-            if (localStorage.getItem("rememberMe")) {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                // If the user is logged in, redirect them to the admin page automatically
+                window.location.href = "admin.html";
+            }
+    
+            if (localStorage.getItem("rememberMe") === "true") {
                 document.getElementById("email").value = localStorage.getItem("userEmail");
                 document.getElementById("rememberMe").checked = true;
             }
         };
     </script>
+    
 
 </body>
 </html>

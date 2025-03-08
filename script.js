@@ -1,4 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    function getCookie(name) {
+        let cookies = document.cookie.split("; ");
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].split("=");
+            if (cookie[0] === name) {
+                return decodeURIComponent(cookie[1]);
+            }
+        }
+        return null;
+    }
+    
+let userLogin=    getCookie('userLogin')
+    
+console.log(userLogin)
+if(userLogin!=="true"){
+window.open("login-sign-up/index.html")
+}
+
+
+
     const restaurantContainer = document.getElementById("restaurantSection");
     const searchInput = document.getElementById("searchRestaurant");
 
@@ -117,3 +138,4 @@ const getRandomFallbackImage = () => {
 
     
 });
+

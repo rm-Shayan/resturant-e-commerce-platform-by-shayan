@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-        <title>Restaurant Menu</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Restaurant Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+ 
+    </style>
+</head>
 <body class="bg-gray-100">
 
     <!-- Navigation -->
@@ -25,15 +27,26 @@
         <h2 class="text-3xl font-bold">Delicious Dishes Await You!</h2>
         <p class="mt-2 text-gray-700">Explore the best meals from this restaurant</p>
     </section>
-    
 
     <!-- Food Menu Section -->
-    <section class="container mx-auto mt-10">
-        <h3 class="text-2xl font-bold mb-6">Our Menu</h3>
-        <div id="foodSection" class="flex flex-wrap gap-6 justify-start">
+    <section class="container mx-auto mt-10 px-4">
+        <h3 class="text-2xl font-bold mb-6 text-gray-800">Our Menu</h3>
+        
+        <!-- Food section: Using flexbox instead of grid -->
+        <div id="foodSection" class="flex flex-wrap gap-6">
             <!-- Food items will be dynamically inserted here -->
         </div>
     </section>
+    
+    
+
+    <!-- Sidebar for Product Details -->
+    <aside id="productSidebar" class="fixed top-0 right-0 w-full h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 overflow-auto z-50">
+       
+        <div id="sidebarContent" class="p-6">
+            <!-- Dynamic product details will be added here -->
+        </div>
+    </aside>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-6 mt-10">
@@ -42,6 +55,6 @@
 
     <!-- JavaScript -->
     <script src="food.js"></script>
+
 </body>
 </html>
-
