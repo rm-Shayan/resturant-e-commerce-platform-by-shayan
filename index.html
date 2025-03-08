@@ -140,8 +140,8 @@
 
     <!-- JavaScript -->
     <script>
-        // Menu Toggle
-        document.getElementById('menuToggle').addEventListener('click', () => {
+
+document.getElementById('menuToggle').addEventListener('click', () => {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
 
@@ -215,246 +215,218 @@
 
 
 
-
-    
-
-
-
-    // Function to toggle the cart sidebar
-    document.addEventListener("DOMContentLoaded", function () {
-    const cartLink = document.getElementById("cartLink");
-
-    if (cartLink) {
-        cartLink.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleCart();
-        });
-    } else {
-        console.error("cartLink element not found!");
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+    initProfileImage();
+    initCart();
+    initOrderSidebar();
+    initMenuToggle();
 });
 
-function toggleCart() {
-    const cartSidebar = document.getElementById("cartSidebar");
+// ✅ 1️⃣ Profile Image Handling  
+const initProfileImage = () => {
+    const defaultImage = "admin-pannel/assets/download.jpeg";
+    const savedImage = localStorage.getItem("userImage") || defaultImage;
 
-    // Toggle sidebar visibility
-    if (cartSidebar.classList.contains("translate-x-full")) {
-        cartSidebar.classList.remove("translate-x-full");
-        cartSidebar.classList.add("translate-x-0");
-        loadCartItems(); // Load items when opening
-    } else {
-        cartSidebar.classList.remove("translate-x-0");
-        cartSidebar.classList.add("translate-x-full");
-    }
-}
+    document.querySelectorAll(".profile-img").forEach(img => img.src = savedImage);
 
-function loadCartItems() {
-    const cartItemsContainer = document.getElementById("cartItemsContainer");
-    if (!cartItemsContainer) {
-        console.error("Cart container not found!");
-        return;
-    }
-
-    cartItemsContainer.innerHTML = ""; // Clear previous content
-
-    let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
-    console.log("Loaded Cart Data:", cart);
-
-    if (!Array.isArray(cart) || cart.length === 0) {
-        cartItemsContainer.innerHTML = "<p class='text-center text-gray-500'>Your cart is empty.</p>";
-        return;
-    }
-
-    cart.forEach((item, index) => {
-        const cartItem = document.createElement("div");
-        cartItem.className = "flex items-center justify-between p-3 border-b";
-
-        cartItem.innerHTML = `
-            <div class="flex items-center space-x-3">
-                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
-                <div>
-                    <p class="font-semibold">${item.name}</p>
-                    <p class="text-gray-600">${item.price}</p>
-
-                </div>
-<button id="orderNowBtn" class="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-2 px-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-200">
-    Order Now
-</button>
-            </div>
- 
-            <button class="remove-btn text-red-500"  data-index="${index}">&times;</button>
-        `;
-
-        cartItemsContainer.appendChild(cartItem);
-    });
-
-    // Attach event listeners to remove buttons
-    document.querySelectorAll(".remove-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const index = parseInt(this.getAttribute("data-index"));
-            removeFromCart(index);
+    document.querySelectorAll(".profile-upload").forEach(input => {
+        input.addEventListener("change", event => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const imageUrl = e.target.result;
+                    localStorage.setItem("userImage", imageUrl);
+                    document.querySelectorAll(".profile-img").forEach(img => img.src = imageUrl);
+                };
+                reader.readAsDataURL(file);
+            }
         });
     });
-}
 
-// Function to remove item from cart
-function removeFromCart(index) {
+    document.getElementById("logout").addEventListener("click", () => {
+        alert("Logged out successfully!");
+        localStorage.removeItem("userImage");
+        window.location.href = "login.html";
+    });
+};
+
+// ✅ 2️⃣ Mobile Menu Toggle  
+const initMenuToggle = () => {
+    document.getElementById("menuToggle").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+    });
+};
+
+// ✅ 3️⃣ Cart Functionality  
+const initCart = () => {
+    document.getElementById("cartLink")?.addEventListener("click", toggleCart);
+    loadCartItems();
+
+    document.getElementById("cartItemsContainer").addEventListener("click", event => {
+        if (event.target.classList.contains("remove-btn")) {
+            removeFromCart(event.target.dataset.index);
+        } else if (event.target.classList.contains("order-now-btn")) {
+            const { name, price, image } = event.target.dataset;
+            orderNow(name, price, image);
+        }
+    });
+};
+
+const toggleCart = event => {
+    event?.preventDefault();
+    document.getElementById("cartSidebar").classList.toggle("translate-x-full");
+    document.getElementById("cartSidebar").classList.toggle("translate-x-0");
+    loadCartItems();
+};
+
+const loadCartItems = () => {
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    const cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
+
+    cartItemsContainer.innerHTML = cart.length
+        ? cart.map((item, index) => `
+            <div class="flex items-center justify-between p-3 border-b">
+                <div class="flex items-center space-x-3">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div>
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-gray-600">${item.price}</p>
+                    </div>
+                    <button class="order-now-btn bg-green-500 text-white px-4 py-2 rounded"
+                        data-name="${item.name}" data-price="${item.price}" data-image="${item.image}">
+                        Order Now
+                    </button>
+                </div>
+                <button class="remove-btn text-red-500" data-index="${index}">&times;</button>
+            </div>
+        `).join("")
+        : "<p class='text-center text-gray-500'>Your cart is empty.</p>";
+};
+
+const removeFromCart = index => {
     let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
     cart.splice(index, 1);
     localStorage.setItem("itemsInCart", JSON.stringify(cart));
-    loadCartItems(); // Refresh cart display
-}
+    loadCartItems();
+};
 
+// ✅ 4️⃣ Order Functionality  
+const initOrderSidebar = () => {
+    document.getElementById("order")?.addEventListener("click", toggleOrderSidebar);
+    loadOrders();
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Order Sidebar Toggle
-    const orderLink = document.getElementById("order");
-
-    if (orderLink) {
-        orderLink.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleOrderSidebar();
-        });
-    }
-
-    // Function to toggle the order sidebar
-    function toggleOrderSidebar() {
-        const orderSidebar = document.getElementById("orderSidebar");
-
-        if (orderSidebar.classList.contains("translate-x-full")) {
-            orderSidebar.classList.remove("translate-x-full");
-            orderSidebar.classList.add("translate-x-0");
-            loadOrders(); // Load orders when opening
-        } else {
-            orderSidebar.classList.remove("translate-x-0");
-            orderSidebar.classList.add("translate-x-full");
+    document.getElementById("orderItemsContainer").addEventListener("click", event => {
+        if (event.target.classList.contains("cancel-order")) {
+            cancelOrder(event.target.dataset.index);
         }
-    }
+    });
+};
 
-    // Function to load orders from localStorage
-    function loadOrders() {
-        const orderItemsContainer = document.getElementById("orderItemsContainer");
-        if (!orderItemsContainer) {
-            console.error("Order container not found!");
-            return;
-        }
+const toggleOrderSidebar = event => {
+    event?.preventDefault();
+    document.getElementById("orderSidebar").classList.toggle("translate-x-full");
+    document.getElementById("orderSidebar").classList.toggle("translate-x-0");
+    loadOrders();
+};
 
-        orderItemsContainer.innerHTML = ""; // Clear previous content
+const loadOrders = () => {
+    const orderItemsContainer = document.getElementById("orderItemsContainer");
+    const orders = JSON.parse(localStorage.getItem("orderItems")) || [];
 
-        let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-
-        if (!Array.isArray(orders) || orders.length === 0) {
-            orderItemsContainer.innerHTML = "<p class='text-center text-gray-500'>No orders placed yet.</p>";
-            return;
-        }
-
-        orders.forEach((order, index) => {
-            const orderItem = document.createElement("div");
-            orderItem.className = "flex flex-col p-3 border-b bg-gray-50 rounded-lg shadow-md";
-
-            // Set status color dynamically
-            let statusColor = "text-yellow-600"; // Default Pending
-            if (order.status === "Completed") statusColor = "text-green-600";
-            if (order.status === "Canceled" || order.status === "Not Available") statusColor = "text-red-500";
-
-            orderItem.innerHTML = `
+    orderItemsContainer.innerHTML = orders.length
+        ? orders.map((order, index) => `
+            <div class="flex flex-col p-3 border-b bg-gray-50 rounded-lg shadow-md">
                 <div class="flex items-center space-x-3">
                     <img src="${order.image}" alt="${order.name}" class="w-16 h-16 object-cover rounded">
                     <div>
                         <p class="font-semibold">${order.name}</p>
                         <p class="text-gray-600">${order.price}</p>
-                        <p class="text-sm ${statusColor}">Status: <span class="order-status">${order.status}</span></p>
+                        <p class="text-sm ${getStatusColor(order.status)}">
+                            Status: <span class="order-status">${order.status}</span>
+                        </p>
                         <p class="text-sm text-red-500">Time Remaining: <span class="order-timer">${formatTime(order.time)}</span></p>
                     </div>
                 </div>
-                <button class="cancel-order bg-red-500 text-white text-sm px-3 py-1 rounded mt-2 w-full">
+                <button class="cancel-order bg-red-500 text-white px-3 py-1 rounded mt-2 w-full" data-index="${index}">
                     Cancel Order
                 </button>
-            `;
+            </div>
+        `).join("")
+        : "<p class='text-center text-gray-500'>No orders placed yet.</p>";
 
-            orderItemsContainer.appendChild(orderItem);
+    orders.forEach((order, index) => startOrderTimer(order, index));
+};
 
-            // Start the countdown timer
-            startOrderTimer(order, index, orderItem);
+const getStatusColor = status => ({
+    "Completed": "text-green-600",
+    "Canceled": "text-red-500",
+    "Not Available": "text-red-500"
+}[status] || "text-yellow-600");
 
-            // Attach cancel order event listener
-            orderItem.querySelector(".cancel-order").addEventListener("click", function () {
-                cancelOrder(index);
-            });
-        });
+const startOrderTimer = (order, index) => {
+    let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
+    
+    if (order.status === "Completed" || order.status === "Canceled") {
+        document.querySelectorAll(".order-status")[index].textContent = order.status;
+        return; 
     }
-
-    // Function to start order timer (Loads from localStorage)
-  // Function to start order timer (Loads from localStorage)
-function startOrderTimer(order, index, orderItem) {
-    let timeRemaining = parseInt(order.time) || 900; // Default 15 minutes if no time is provided
-    const timerElement = orderItem.querySelector(".order-timer");
+    
+    let timeRemaining = parseInt(order.time) || 900;
+    const timerElement = document.querySelectorAll(".order-timer")[index];
 
     const timerInterval = setInterval(() => {
-        let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
+        if (orders[index].status === "Canceled") {
+            clearInterval(timerInterval);
+            timerElement.textContent = "Canceled";
+            return;
+        }
+
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            timerElement.textContent = "Completed!";
-            updateOrderStatus(index, "Completed");
-        } else {
-            timeRemaining--;
-            timerElement.textContent = formatTime(timeRemaining);
-            orders[index].time = timeRemaining; // Save updated time
+            orders[index].status = "Completed";
+            orders[index].time = 0;
             localStorage.setItem("orderItems", JSON.stringify(orders));
+            loadOrders();
+            return;
         }
+
+        timeRemaining--;
+        orders[index].time = timeRemaining;
+        localStorage.setItem("orderItems", JSON.stringify(orders));
+        timerElement.textContent = formatTime(timeRemaining);
     }, 1000);
-}
+};
 
-    // Function to format time in MM:SS
-    function formatTime(seconds) {
-        if (seconds <= 0) return "Completed!";
-        let minutes = Math.floor(seconds / 60);
-        let secs = seconds % 60;
-        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-    }
+const formatTime = seconds => {
+    if (seconds <= 0) return "Completed!";
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+};
 
-    // Function to update order status in localStorage
-    function updateOrderStatus(index, newStatus) {
-        let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-        orders[index].status = newStatus;
-        localStorage.setItem("orderItems", JSON.stringify(orders));
-        loadOrders(); // Refresh the order sidebar
-    }
-
-    // Function to cancel an order
-    function cancelOrder(index) {
-        let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-        orders[index].status = "Canceled"; // Instead of deleting, mark as canceled
-        orders[index].time = 0; // Set time to 0
-        localStorage.setItem("orderItems", JSON.stringify(orders));
-        loadOrders(); // Refresh order sidebar
-    }
-
-    
-    // Function to place an order (Called from "Order Now" button)
-// Function to place an order (Called from "Order Now" button)
-function orderNow(name, price, image, time = 900) {
+const cancelOrder = index => {
     let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-
-    let orderItem = {
-        name: name,
-        price: price,
-        image: image,
-        status: "Pending",
-        time: parseInt(time) || 900 // Default to 900 seconds if no valid time is provided
-    };
-
-    orders.push(orderItem);
+    orders[index].status = "Canceled";
+    orders[index].time = 0;
     localStorage.setItem("orderItems", JSON.stringify(orders));
+    loadOrders();
+};
 
-    alert(`✅ Order placed for ${name} (Time: ${formatTime(orderItem.time)})`);
-}
 
-});
 
- 
+
+
+
+
+
+
+
+
+  
+
+
+
 
 </script>
 
