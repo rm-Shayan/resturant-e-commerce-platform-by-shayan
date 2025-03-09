@@ -141,6 +141,26 @@
     <!-- JavaScript -->
     <script>
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Checking login status...");
+    
+    let userLogin = localStorage.getItem("userLogin");
+    console.log("User Login Status:", userLogin); // Debugging
+
+    if (userLogin === "true") {
+        console.log("Redirecting to home page...");
+        window.location.reload
+    }else{
+        console.log("Redirecting to login page...");
+        window.location.href = "login-sign-up/index.html"; // Adjust path if needed
+    }
+});
+
+
+
+
 document.getElementById('menuToggle').addEventListener('click', () => {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
@@ -210,46 +230,19 @@ document.getElementById('menuToggle').addEventListener('click', () => {
     document.getElementById('logout').addEventListener('click', () => {
         alert('Logged out successfully!');
         localStorage.removeItem("userImage"); // Clear profile image
-        window.location.href = "login.html"; // Redirect to login page
+           window.open("login-sign-up/index.html") // Redirect to login page
     });
 
 
 
     document.addEventListener("DOMContentLoaded", () => {
-    initProfileImage();
+  
     initCart();
     initOrderSidebar();
     initMenuToggle();
 });
 
 // ✅ 1️⃣ Profile Image Handling  
-const initProfileImage = () => {
-    const defaultImage = "admin-pannel/assets/download.jpeg";
-    const savedImage = localStorage.getItem("userImage") || defaultImage;
-
-    document.querySelectorAll(".profile-img").forEach(img => img.src = savedImage);
-
-    document.querySelectorAll(".profile-upload").forEach(input => {
-        input.addEventListener("change", event => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const imageUrl = e.target.result;
-                    localStorage.setItem("userImage", imageUrl);
-                    document.querySelectorAll(".profile-img").forEach(img => img.src = imageUrl);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-    document.getElementById("logout").addEventListener("click", () => {
-        alert("Logged out successfully!");
-        localStorage.removeItem("userImage");
-        window.location.href = "login.html";
-    });
-};
 
 // ✅ 2️⃣ Mobile Menu Toggle  
 const initMenuToggle = () => {
@@ -345,7 +338,9 @@ const loadOrders = () => {
                         <p class="text-sm ${getStatusColor(order.status)}">
                             Status: <span class="order-status">${order.status}</span>
                         </p>
-                        <p class="text-sm text-red-500">Time Remaining: <span class="order-timer">${formatTime(order.time)}</span></p>
+                        <p class="text-sm text-red-500">
+                            Time Remaining: <span class="order-timer">${formatTime(order.time)}</span>
+                        </p>
                     </div>
                 </div>
                 <button class="cancel-order bg-red-500 text-white px-3 py-1 rounded mt-2 w-full" data-index="${index}">
@@ -364,30 +359,53 @@ const getStatusColor = status => ({
     "Not Available": "text-red-500"
 }[status] || "text-yellow-600");
 
+const timers = {}; // Store active timers
+
 const startOrderTimer = (order, index) => {
     let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-    
+
     if (order.status === "Completed" || order.status === "Canceled") {
         document.querySelectorAll(".order-status")[index].textContent = order.status;
         return; 
     }
-    
-    let timeRemaining = parseInt(order.time) || 900;
+
+    // ✅ **GET TIME FROM LOCAL STORAGE, ELSE DEFAULT TO 15 MINUTES**
+    let timeRemaining = parseInt(order.time);
+    if (isNaN(timeRemaining)) {
+        timeRemaining = 900; // 15 minutes default
+        orders[index].time = timeRemaining;
+        localStorage.setItem("orderItems", JSON.stringify(orders));
+    }
+
     const timerElement = document.querySelectorAll(".order-timer")[index];
 
-    const timerInterval = setInterval(() => {
+    // ✅ **STOP TIMER IF TIME IS 0 AND DO NOT RESET**
+    if (timeRemaining <= 0) {
+        timerElement.textContent = "Time Up!";
+        orders[index].status = "Completed";
+        orders[index].time = 0;
+        localStorage.setItem("orderItems", JSON.stringify(orders));
+        return;
+    }
+
+    // **CLEAR PREVIOUS TIMER IF EXISTS**
+    if (timers[index]) {
+        clearInterval(timers[index]);
+    }
+
+    timers[index] = setInterval(() => {
         if (orders[index].status === "Canceled") {
-            clearInterval(timerInterval);
+            clearInterval(timers[index]);
             timerElement.textContent = "Canceled";
             return;
         }
 
         if (timeRemaining <= 0) {
-            clearInterval(timerInterval);
+            clearInterval(timers[index]);
             orders[index].status = "Completed";
             orders[index].time = 0;
             localStorage.setItem("orderItems", JSON.stringify(orders));
-            loadOrders();
+            timerElement.textContent = "Time Up!";
             return;
         }
 
@@ -399,7 +417,7 @@ const startOrderTimer = (order, index) => {
 };
 
 const formatTime = seconds => {
-    if (seconds <= 0) return "Completed!";
+    if (seconds <= 0) return "Time Up!";
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
@@ -410,10 +428,13 @@ const cancelOrder = index => {
     orders[index].status = "Canceled";
     orders[index].time = 0;
     localStorage.setItem("orderItems", JSON.stringify(orders));
+
+    if (timers[index]) {
+        clearInterval(timers[index]);
+    }
+
     loadOrders();
 };
-
-
 
 
 

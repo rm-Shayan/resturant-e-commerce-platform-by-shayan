@@ -1,22 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Function to get cookie value
-    function getCookie(name) {
-        let cookies = document.cookie.split("; ");
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].split("=");
-            if (cookie[0] === name) {
-                return decodeURIComponent(cookie[1]);
-            }
-        }
-        return null;
-    }
-
-    let userLogin = getCookie('userLogin');
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("Checking login status...");
+        
+        let userLogin = localStorage.getItem("userLogin");
+        console.log("User Login Status:", userLogin); // Debugging
     
-    // Redirect to login if not logged in
-    if (userLogin !== "true") {
-        window.location.href = "login-sign-up/index.html";
-    }
+        if (userLogin === "true") {
+            console.log("Redirecting to home page...");
+            window.location.reload
+        }else{
+            console.log("Redirecting to login page...");
+            window.location.href = "login-sign-up/index.html"; // Adjust path if needed
+        }
+    });
+    
+
+
 
     // Get elements
     const foodSection = document.getElementById("foodSection");

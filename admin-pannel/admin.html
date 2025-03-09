@@ -107,26 +107,24 @@
 
     <div class="p-5 border-b flex justify-between items-center">
         <h3 class="text-xl font-bold">Your Orders</h3>
-        <button onclick="toggleOrderSidebar()" class="text-red-500 text-xl">&times;</button>
+        <button id="closeOrderSidebar" class="text-red-500 text-xl">&times;</button>
     </div>
    
     <!-- User Info Section -->
-      <div class="p-5 border-b flex items-center gap-3">
-        <img id="orderUserImage" src="" alt="User Image" class="w-12 h-12 rounded-full border">
-        <div>
-            <p id="orderUserName" class="text-lg font-semibold text-gray-700">User Name</p>
-            <p id="orderUserEmail" class=" text-red-500 font-bold text-xl" ></p>
-        </div>
-        <button onclick="toggleCart()" class="ml-auto text-grey-500 text-2xl">&times;</button>
+    <div class="flex flex-col items-center p-5">
+        <img id="orderUserImage" src="admin-pannel/assets/download.jpeg" 
+            alt="Profile Image" class="w-16 h-16 rounded-full border">
+        <p id="orderUserName" class="text-lg font-bold mt-2"></p>
+        <p id="orderUserEmail" class="text-gray-600"></p>
     </div>
 
     
    
    
-
-    <div id="orderItemsContainer" class="p-5 space-y-4">
-        <!-- Orders will be dynamically inserted here -->
+    <div id="orderItemsContainer" class="space-y-4">
+        <!-- dynamically cards will be added here -->
     </div>
+
 </aside>
 
     <!-- Main Content -->

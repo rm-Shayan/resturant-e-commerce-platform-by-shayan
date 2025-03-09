@@ -1,74 +1,71 @@
-
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 1. Check if User is Logged In
     let isLogin = JSON.parse(localStorage.getItem("isLoggedIn"));
-
     if (!isLogin) {
-        // Redirect to login page if not logged in
-        window.location.href = "admin";
-    } 
-})
-function getCookie(name) {
-    let cookies = document.cookie.split("; ");
-    for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].split("=");
-        if (cookie[0] === name) {
-            return decodeURIComponent(cookie[1]);
+        window.location.href = "login.html"; // Redirect if not logged in
+        return; // Stop execution
+    }
+
+    // ✅ 2. Select DOM Elements AFTER Page Loads
+    const profileBtn = document.getElementById("profileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const profileImage = document.getElementById("profileImage");
+    const profileImageSidebar = document.getElementById("profileImageSidebar");
+    const cartUserImg = document.getElementById("cartUserImage");
+    const imageUpload = document.getElementById("imageUpload");
+
+    // ✅ 3. Profile Dropdown Toggle
+    profileBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // Prevent immediate closing
+        dropdownMenu.classList.toggle("hidden");
+    });
+
+    // ✅ 4. Close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+        if (!profileBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.add("hidden");
         }
-    }
-    return null;
-}
-// Profile Dropdown Logic
-const profileBtn = document.getElementById("profileBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
-const logoutBtn = document.getElementById("logoutBtn");
-const profileImage = document.getElementById("profileImage");
-const profileImageSidebar = document.getElementById("profileImageSidebar");
-const imageUpload = document.getElementById("imageUpload");
+    });
 
-profileBtn.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("hidden");
-});
+    // ✅ 5. Logout Function
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("profileImage"); // Remove saved image on logout
+        window.location.href = "login.html";
+    });
 
-// Close dropdown when clicking outside
-document.addEventListener("click", (event) => {
-    if (!profileBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-        dropdownMenu.classList.add("hidden");
-    }
-});
-
-// Logout Function
-logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("isLoggedIn");
-    window.location.href = "login.html";
-});
-
-// Load profile image from local storage
-document.addEventListener("DOMContentLoaded", () => {
+    // ✅ 6. Load Profile Image from Local Storage
     const savedImage = localStorage.getItem("profileImage");
-    const cartUserImg=document.getElementById("cartUserImage")
-    const defaultImg="assets/download.jpeg"
+    const defaultImg = "assets/download.jpeg"; // Set a default image
+
     if (savedImage) {
-       cartUserImg.src = savedImage;
-       
-    }else{
-cartUserImg.src=defaultImg;
+        profileImage.src = savedImage;
+        profileImageSidebar.src = savedImage;
+        cartUserImg.src = savedImage;
+    } else {
+        profileImage.src = defaultImg;
+        profileImageSidebar.src = defaultImg;
+        cartUserImg.src = defaultImg;
     }
+
+    // ✅ 7. Handle Image Upload
+    imageUpload.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+                profileImage.src = imageUrl;
+                profileImageSidebar.src = imageUrl;
+                cartUserImg.src = imageUrl; // Ensure image updates everywhere
+                localStorage.setItem("profileImage", imageUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });
 
-// Handle Image Upload
-imageUpload.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const imageUrl = e.target.result;
-            profileImage.src = imageUrl;
-            profileImageSidebar.src = imageUrl;
-            localStorage.setItem("profileImage", imageUrl);
-        };
-        reader.readAsDataURL(file);
-    }
-});
 
 
 
@@ -147,93 +144,77 @@ setTimeout(() => {
 }
 
 function loadCartItems() {
-const cartItemsContainer = document.getElementById("cartItemsContainer");
-if (!cartItemsContainer) {
-console.error("Cart container not found!");
-return;
-}
-
-cartItemsContainer.innerHTML = ""; // Clear previous content
-
-let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
-console.log("Loaded Cart Data:", cart);
-
-if (!Array.isArray(cart) || cart.length === 0) {
-cartItemsContainer.innerHTML = "<p class='text-center text-gray-500'>Your cart is empty.</p>";
-return;
-}
-function getCookie(name) {
-    let cookies = document.cookie.split("; ");
-    for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].split("=");
-        if (cookie[0] === name) {
-            return decodeURIComponent(cookie[1]);
-        }
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    if (!cartItemsContainer) {
+        console.error("Cart container not found!");
+        return;
     }
-    return null;
-}
 
+    cartItemsContainer.innerHTML = ""; // Clear previous content
+    let cart = JSON.parse(localStorage.getItem("itemsInCart")) || [];
+    console.log("Loaded Cart Data:", cart);
 
-let cartUser=document.getElementById("cartUserName")
-let cartEmail=document.getElementById("cartUserEmail")
-UserEmail=JSON.stringify(localStorage.getItem("userEmail"))
-let userName=getCookie("userName")
-if(!UserEmail){
-    console.error("User Email not found!");
-}else{
-    cartEmail.innerText=UserEmail;
-}
+    if (!Array.isArray(cart) || cart.length === 0) {
+        cartItemsContainer.innerHTML = "<p class='text-center text-gray-500'>Your cart is empty.</p>";
+        return;
+    }
 
+    // ✅ Fix User Info Loading
+    let cartUser = document.getElementById("cartUserName");
+    let cartEmail = document.getElementById("cartUserEmail");
+    let cartImg = document.getElementById("cartUserImage");
 
-if(!userName){
-    console.error("User Name not found!");
-}else{
-    cartUser.innerText=userName;
-}
-
-
-
-document.addEventListener("DOMContentLoaded",()=>{
+    let UserEmail = localStorage.getItem("userEmail");
+    let userName = localStorage.getItem("userName");
     const defaultImage = "admin-pannel/assets/download.jpeg"; 
-        
-// Get saved image from localStorage or use default image
-const savedImage = localStorage.getItem("userImage") || defaultImage;
+    const savedImage = localStorage.getItem("userImage") || defaultImage;
 
-let cartImg=document.getElementById("cartUserImage")
-cartImg.src=savedImage;
+    if (cartEmail && UserEmail) {
+        cartEmail.innerText = UserEmail;
+    } else {
+        console.error("User Email element not found or missing data!");
+    }
 
+    if (cartUser && userName) {
+        cartUser.innerText = userName;
+    } else {
+        console.error("User Name element not found or missing data!");
+    }
 
-})
+    if (cartImg) {
+        cartImg.src = savedImage;
+    } else {
+        console.error("Cart profile image element not found!");
+    }
 
-cart.forEach((item, index) => {
-const cartItem = document.createElement("div");
-cartItem.className = "flex items-center justify-between p-3 border-b";
+    // ✅ Load Cart Items
+    cart.forEach((item, index) => {
+        const cartItem = document.createElement("div");
+        cartItem.className = "flex items-center justify-between p-3 border-b";
 
-cartItem.innerHTML = `
-    <div class="flex items-center space-x-3">
-        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
-        <div>
-            <p class="font-semibold">${item.name}</p>
-            <p class="text-gray-600">${item.price}</p>
+        cartItem.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                <div>
+                    <p class="font-semibold">${item.name}</p>
+                    <p class="text-gray-600">${item.price}</p>
+                </div>
+            </div>
+            <button class="remove-btn text-red-500" data-index="${index}">&times;</button>
+        `;
 
-        </div>
-                          
-    </div>
+        cartItemsContainer.appendChild(cartItem);
+    });
 
-    <button class="remove-btn text-red-500" data-index="${index}">&times;</button>
-`;
-
-cartItemsContainer.appendChild(cartItem);
-});
-
-// Attach event listeners to remove buttons
-document.querySelectorAll(".remove-btn").forEach(button => {
-button.addEventListener("click", function () {
-    const index = parseInt(this.getAttribute("data-index"));
-    removeFromCart(index);
-});
-});
+    // ✅ Attach Event Listeners for Remove Buttons
+    document.querySelectorAll(".remove-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const index = parseInt(this.getAttribute("data-index"));
+            removeFromCart(index);
+        });
+    });
 }
+
 
 // Function to remove item from cart
 function removeFromCart(index) {
@@ -250,139 +231,204 @@ loadCartItems(); // Refresh cart display
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Order Sidebar Toggle
-    const orderLink = document.getElementById("order");
+    console.log("Page loaded.");
 
+    // ✅ CLOSURE: Manages Order Sidebar State
+    const OrderSidebar = (function () {
+        const orderSidebar = document.getElementById("orderSidebar");
+
+        function toggle(callback) {
+            if (!orderSidebar) return console.error("❌ Order sidebar not found!");
+
+            if (orderSidebar.classList.contains("translate-x-full")) {
+                orderSidebar.classList.remove("translate-x-full");
+                orderSidebar.classList.add("translate-x-0");
+
+                // ✅ Use callback to ensure UI updates before sidebar opens
+                if (callback) callback();
+            } else {
+                orderSidebar.classList.add("translate-x-full");
+                orderSidebar.classList.remove("translate-x-0");
+            }
+        }
+
+        return { toggle };
+    })();
+
+    // ✅ EVENT LISTENERS
+    const orderLink = document.getElementById("order");
     if (orderLink) {
         orderLink.addEventListener("click", function (event) {
             event.preventDefault();
-            toggleOrderSidebar();
+            OrderSidebar.toggle(loadOrders);
             loadUserInfo();
         });
     }
 
-    // Function to load user profile info in order sidebar
+    document.getElementById("closeOrderSidebar")?.addEventListener("click", function () {
+        OrderSidebar.toggle();
+    });
+
+    // ✅ FUNCTION: Load User Info in Order Sidebar
     function loadUserInfo() {
-        const defaultImageOrder = "admin-pannel/assets/download.jpeg"; 
-        const savedImage = localStorage.getItem("userImage") || defaultImageOrder;
+        console.log("Loading user info...");
 
-        let orderImg = document.getElementById("orderUserImage");
-        let orderUserName = document.getElementById("orderUserName");
-        let orderUserEmail = document.getElementById("orderUserEmail");
+        const defaultImage = "admin-pannel/assets/download.jpeg";
+        const savedImage = localStorage.getItem("userImage") || defaultImage;
+        const userEmail = localStorage.getItem("userEmail");
+        const userName = localStorage.getItem("userName");
 
-        let userEmail = localStorage.getItem("userEmail");
-        let userName = getCookie("userName");
-
-        if (orderUserEmail && userEmail) {
-            orderUserEmail.innerText = userEmail;
-        } else {
-            console.error("User Email not found or element missing!");
-        }
-
-        if (orderUserName && userName) {
-            orderUserName.innerText = userName;
-        } else {
-            console.error("User Name not found or element missing!");
-        }
-
-        if (orderImg) {
-            orderImg.src = savedImage;
-        } else {
-            console.error("Profile image element not found!");
-        }
+        updateElement("orderUserImage", img => img.src = savedImage);
+        updateElement("orderUserName", el => el.innerText = userName);
+        updateElement("orderUserEmail", el => el.innerText = userEmail);
     }
 
-    // Function to toggle the order sidebar
-    function toggleOrderSidebar() {
-        const orderSidebar = document.getElementById("orderSidebar");
-
-        if (orderSidebar.classList.contains("translate-x-full")) {
-            orderSidebar.classList.remove("translate-x-full");
-            orderSidebar.classList.add("translate-x-0");
-            loadOrders();
-        } else {
-            orderSidebar.classList.remove("translate-x-0");
-            orderSidebar.classList.add("translate-x-full");
-        }
-    }
-
-    // Function to load orders from localStorage
+    // ✅ FUNCTION: Load Orders from localStorage
     function loadOrders() {
+        console.log("Loading orders...");
+    
         const orderItemsContainer = document.getElementById("orderItemsContainer");
-        if (!orderItemsContainer) {
-            console.error("Order container not found!");
-            return;
-        }
-
-        orderItemsContainer.innerHTML = ""; 
-
+        if (!orderItemsContainer) return console.error("❌ Order container not found!");
+    
+        orderItemsContainer.innerHTML = "";
+    
         let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-
         if (!Array.isArray(orders) || orders.length === 0) {
-            orderItemsContainer.innerHTML = "<p class='text-center text-gray-500'>No orders placed yet.</p>";
-            return;
+            return orderItemsContainer.innerHTML = `<p class='text-center text-gray-500 text-lg font-semibold py-5'>No orders placed yet.</p>`;
         }
-
+    
+        // ✅ Apply Flexbox for Left Alignment on Small Screens
+        orderItemsContainer.className = "flex flex-wrap justify-start gap-4 p-4"; 
+    
         orders.forEach((order, index) => {
-            const orderItem = document.createElement("div");
-            orderItem.className = "flex flex-col p-3 border-b bg-gray-50 rounded-lg shadow-md";
-
-            orderItem.innerHTML = `
-                <div class="flex items-center space-x-3">
-                    <img src="${order.image}" alt="${order.name}" class="w-16 h-16 object-cover rounded">
-                    <div>
-                        <p class="font-semibold">${order.name}</p>
-                        <p class="text-gray-600">${order.price}</p>
-                        <label class="text-sm font-bold">Status:</label>
-                        <select class="order-status p-1 border rounded text-sm">
+            orderItemsContainer.appendChild(createOrderCard(order, index));
+        });
+    }
+    
+    // ✅ Function to Create Order Cards (Styled with Flexbox)
+    function createOrderCard(order, index) {
+        const orderItem = document.createElement("div");
+        orderItem.className = `
+            flex flex-col p-5 border rounded-xl shadow-lg bg-white 
+            hover:shadow-xl transition-all duration-300 ease-in-out 
+            w-full sm:w-[48%] md:w-[31%] lg:w-[24%] 
+        `;
+    
+        orderItem.innerHTML = `
+            <div class="flex items-center space-x-4">
+                <img src="${order.image}" alt="${order.name}" 
+                     class="w-20 h-20 object-cover rounded-lg border shadow-md">
+    
+                <div class="flex-1">
+                    <p class="font-semibold text-lg text-gray-800">${order.name}</p>
+                    <p class="text-gray-500 text-sm">${order.price}</p>
+    
+                    <div class="mt-3">
+                        <label class="text-sm font-bold text-gray-700">Status:</label>
+                        <select class="order-status p-2 border rounded-md text-sm w-full bg-gray-100">
                             <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
                             <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>Completed</option>
                             <option value="Canceled" ${order.status === "Canceled" ? "selected" : ""}>Canceled</option>
                             <option value="Not Available" ${order.status === "Not Available" ? "selected" : ""}>Not Available</option>
                         </select>
-
-                        <label class="text-sm font-bold">Time Remaining:</label>
-                        <input type="number" class="order-timer-input w-20 p-1 border rounded text-sm" 
-                            value="${order.time}" min="0"> min
+                    </div>
+    
+                    <div class="mt-3">
+                        <label class="text-sm font-bold text-gray-700">Time Remaining:</label>
+                        <input type="number" class="order-timer-input w-full p-2 border rounded-md text-sm bg-gray-100"
+                               value="${order.time}" min="0"> min
                     </div>
                 </div>
-                <button class="update-order bg-blue-500 text-white text-sm px-3 py-1 rounded mt-2 w-full">
+            </div>
+    
+            <div class="mt-5 flex justify-between">
+                <button class="update-order bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white 
+                               text-sm font-semibold px-4 py-2 rounded-md shadow-md w-[48%]">
                     Update Order
                 </button>
-                <button class="cancel-order bg-red-500 text-white text-sm px-3 py-1 rounded mt-2 w-full">
+                <button class="cancel-order bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white 
+                               text-sm font-semibold px-4 py-2 rounded-md shadow-md w-[48%]">
                     Cancel Order
                 </button>
-            `;
+            </div>
+        `;
+    
+        // Attach event listeners inside closure
+        orderItem.querySelector(".update-order").addEventListener("click", () => updateOrder(index, orderItem));
+        orderItem.querySelector(".cancel-order").addEventListener("click", () => cancelOrder(index));
+    
+        return orderItem;
+    }
+    
 
-            orderItemsContainer.appendChild(orderItem);
+    // ✅ FUNCTION: Create Order Card (With Better UI & Layout)
+    function createOrderCard(order, index) {
+        const orderItem = document.createElement("div");
+        orderItem.className = `
+            flex flex-col p-5 border rounded-xl shadow-lg bg-white 
+            hover:shadow-xl transition-all duration-300 ease-in-out 
+            max-w-md mx-auto w-full sm:w-[90%] md:w-[80%] lg:w-[60%]
+        `;
 
-            // Attach event listeners
-            orderItem.querySelector(".update-order").addEventListener("click", function () {
-                updateOrder(index, orderItem);
-            });
+        orderItem.innerHTML = `
+            <div class="flex items-center space-x-4">
+                <img src="${order.image}" alt="${order.name}" 
+                     class="w-24 h-24 object-cover rounded-lg border shadow-md">
 
-            orderItem.querySelector(".cancel-order").addEventListener("click", function () {
-                cancelOrder(index);
-            });
-        });
+                <div class="flex-1">
+                    <p class="font-semibold text-lg text-gray-800">${order.name}</p>
+                    <p class="text-gray-500 text-sm">${order.price}</p>
+
+                    <div class="mt-3">
+                        <label class="text-sm font-bold text-gray-700">Status:</label>
+                        <select class="order-status p-2 border rounded-md text-sm w-full bg-gray-100">
+                            <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
+                            <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>Completed</option>
+                            <option value="Canceled" ${order.status === "Canceled" ? "selected" : ""}>Canceled</option>
+                            <option value="Not Available" ${order.status === "Not Available" ? "selected" : ""}>Not Available</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="text-sm font-bold text-gray-700">Time Remaining:</label>
+                        <input type="number" class="order-timer-input w-full p-2 border rounded-md text-sm bg-gray-100"
+                               value="${order.time}" min="0"> min
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 flex justify-between">
+                <button class="update-order bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white 
+                               text-sm font-semibold px-4 py-2 rounded-md shadow-md w-[48%]">
+                    Update Order
+                </button>
+                <button class="cancel-order bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white 
+                               text-sm font-semibold px-4 py-2 rounded-md shadow-md w-[48%]">
+                    Cancel Order
+                </button>
+            </div>
+        `;
+
+        // Attach event listeners inside closure
+        orderItem.querySelector(".update-order").addEventListener("click", () => updateOrder(index, orderItem));
+        orderItem.querySelector(".cancel-order").addEventListener("click", () => cancelOrder(index));
+
+        return orderItem;
     }
 
-    // Function to update order details
+    // ✅ FUNCTION: Update Order
     function updateOrder(index, orderItem) {
         let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
 
-        const newStatus = orderItem.querySelector(".order-status").value;
-        const newTime = parseInt(orderItem.querySelector(".order-timer-input").value) || 0;
-
-        orders[index].status = newStatus;
-        orders[index].time = newTime * 60; // Convert minutes to seconds for countdown
+        orders[index].status = orderItem.querySelector(".order-status").value;
+        orders[index].time = parseInt(orderItem.querySelector(".order-timer-input").value) || 0;
 
         localStorage.setItem("orderItems", JSON.stringify(orders));
         loadOrders();
         alert("✅ Order updated successfully!");
     }
 
-    // Function to cancel an order
+    // ✅ FUNCTION: Cancel Order
     function cancelOrder(index) {
         let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
         orders.splice(index, 1);
@@ -391,22 +437,13 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("❌ Order canceled!");
     }
 
-    // Function to place an order (Called from "Order Now" button)
-    function orderNow(name, price, image) {
-        let orders = JSON.parse(localStorage.getItem("orderItems")) || [];
-
-        let orderItem = {
-            name: name,
-            price: price,
-            image: image,
-            status: "Pending",
-            time: 15 * 60 // 15 minutes default
-        };
-
-        orders.push(orderItem);
-        localStorage.setItem("orderItems", JSON.stringify(orders));
-
-        alert(`✅ Order placed for ${name}`);
+    // ✅ FUNCTION: Utility to update elements safely
+    function updateElement(id, callback) {
+        const el = document.getElementById(id);
+        if (el) callback(el);
+        else console.error(`❌ Element #${id} not found!`);
     }
+
+    console.log("Script initialized.");
 });
 
