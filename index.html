@@ -24,7 +24,7 @@
                 <a href="#" class="hover:text-green-600">Restaurants</a>
                 <a href="#" class="hover:text-green-600" id="order">Order</a>
                 <a href="#" class="hover:text-green-600" id="cartLink">Cart</a>
-                <a href="#" class="hover:text-green-600">Contact</a>
+                <a id="contactUs" href="#" class="hover:text-green-600">Contact</a>
                 
                 <!-- Profile Section for Desktop -->
                 <div class="relative hidden md:block">
@@ -61,8 +61,8 @@
             <a href="#" class="hover:text-green-600">Home</a>
             <a href="#" class="hover:text-green-600">Restaurants</a>
             <a  id="order" class="hover:text-green-600">Order</a>
-            <a href="#" class="hover:text-green-600  " id="#cartSidebar button">Cart</a>
-            <a href="#" class="hover:text-green-600">Contact</a>
+            <a href="" class="hover:text-green-600  " id="#cartSidebar button">Cart</a>
+            <a id="contactUs" href="#" class="hover:text-green-600">Contact</a>
 
             <!-- Profile Section for Mobile -->
             <div class="relative flex flex-col items-center">
@@ -156,6 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Redirecting to login page...");
         window.location.href = "login-sign-up/index.html"; // Adjust path if needed
     }
+    document.getElementById("contactUs").addEventListener("click",()=>{
+        event.preventDefault();
+        window.open("contactUs/contact.html");
+    })
 });
 
 

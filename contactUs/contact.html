@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Screen Chat UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200 h-screen flex justify-center items-center">
+
+    <div class="w-full h-screen bg-white shadow-lg flex flex-col">
+
+        <!-- 🔵 Chat Header -->
+        <div class="bg-green-600 text-white p-4 flex items-center space-x-3 shadow-md">
+            <img src="https://i.pravatar.cc/40?img=1" alt="Admin Avatar" class="w-10 h-10 rounded-full">
+            <div>
+                <h2 class="text-lg font-semibold">Admin Support</h2>
+                <p class="text-sm text-gray-200">Online</p>
+            </div>
+        </div>
+
+        <!-- 💬 Chat Messages -->
+        <div id="chat-box" class="flex-1 p-4 space-y-4 overflow-y-auto">
+
+            <!-- Messages will be dynamically added here -->
+
+        </div>
+
+        <!-- 📝 Chat Input -->
+        <div class="p-4 border-t flex items-center space-x-2 bg-white">
+            <input type="text" id="message-input" placeholder="Type a message..."
+                class="flex-1 p-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="send-btn" class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                Send
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatBox = document.getElementById("chat-box");
+            const input = document.getElementById("message-input");
+            const sendBtn = document.getElementById("send-btn");
+
+            // Load admin messages from local storage
+            const savedMessages = JSON.parse(localStorage.getItem("adminMessages")) || [];
+
+            // Render saved messages
+            savedMessages.forEach(msg => appendMessage(msg.text, msg.sender, msg.timestamp));
+
+            sendBtn.addEventListener("click", function () {
+                sendMessage();
+            });
+
+            input.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") sendMessage();
+            });
+
+            function sendMessage() {
+                const messageText = input.value.trim();
+                if (messageText === "") return;
+
+                const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+                // Save to local storage
+                const newMessage = { text: messageText, sender: "user", timestamp };
+                savedMessages.push(newMessage);
+                localStorage.setItem("adminMessages", JSON.stringify(savedMessages));
+
+                // Append user message
+                appendMessage(messageText, "user", timestamp);
+                input.value = "";
+
+                // Simulate admin reply after 1.5 seconds
+                setTimeout(() => {
+                    const adminReply = "Thanks for reaching out! How can I assist you?";
+                    const adminTimestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+                    const adminMessage = { text: adminReply, sender: "admin", timestamp: adminTimestamp };
+                    savedMessages.push(adminMessage);
+                    localStorage.setItem("adminMessages", JSON.stringify(savedMessages));
+
+                    appendMessage(adminReply, "admin", adminTimestamp);
+                }, 1500);
+            }
+
+            function appendMessage(text, sender, timestamp) {
+                const messageDiv = document.createElement("div");
+                messageDiv.classList = sender === "user" ? "flex items-end justify-end space-x-2" : "flex items-start space-x-2";
+
+                messageDiv.innerHTML = `
+                    ${sender === "admin" ? `<img src="https://i.pravatar.cc/40?img=1" alt="Admin Avatar" class="w-8 h-8 rounded-full">` : ""}
+                    <div class="${sender === "user" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-900"} p-3 rounded-lg max-w-xs shadow">
+                        <p>${text}</p>
+                        <span class="text-xs block mt-1 ${sender === "user" ? "text-white" : "text-gray-500"}">${timestamp}</span>
+                    </div>
+                    ${sender === "user" ? `<img src="https://i.pravatar.cc/40?img=2" alt="User Avatar" class="w-8 h-8 rounded-full">` : ""}
+                `;
+
+                chatBox.appendChild(messageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+            }
+        });
+    </script>
+
+</body>
+</html>
